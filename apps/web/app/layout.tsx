@@ -1,11 +1,13 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { IBM_Plex_Sans } from 'next/font/google'
 
-import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toaster";
 import { QueryProvider } from "@/providers/query-provider";
 import { SheetAccountProvider } from "@/providers/sheet-account-provider";
+
 
 export const ibm_plex_sans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -31,6 +33,7 @@ export default function RootLayout({
           <QueryProvider>
             <SheetAccountProvider />
             {children}
+            <Toaster />
           </QueryProvider>
         </body>
       </html>

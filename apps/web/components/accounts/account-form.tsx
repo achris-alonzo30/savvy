@@ -22,7 +22,7 @@ const formSchema = insertAccountSchema.pick({
     name: true
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 type AccountFormProps = {
     id?: string;
     defaultValues: FormValues;
@@ -37,7 +37,7 @@ export const AccountForm = ({
     onDelete,
     defaultValues,
     disabled = false
-} : AccountFormProps) => {
+}: AccountFormProps) => {
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -45,15 +45,17 @@ export const AccountForm = ({
     });
 
     const handleSubmit = (values: FormValues) => {
-        console.log(values)
+        onSubmit(values)
     }
+
+    const handleDelete = () => onDelete?.();
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
-                <FormField 
+                <FormField
                     name="name"
                     control={form.control}
-                    render={({field}) => (
+                    render={({ field }) => (
                         <FormItem>
                             <FormLabel>Account Name</FormLabel>
                             <FormControl>
@@ -70,6 +72,21 @@ export const AccountForm = ({
                         </FormItem>
                     )}
                 />
+                <Button type="submit" className="w-full" disabled={disabled}>
+                    {id ? "Save Changes" : "Create Account"}
+                </Button>
+                {!!id && (
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={disabled}
+                        onClick={handleDelete}
+                        className="w-full"
+                    >
+                        <Trash className="size-4 pr-2" />
+                        Delete Account
+                    </Button>
+                )}
             </form>
         </Form>
     )
