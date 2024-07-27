@@ -16,7 +16,9 @@ export const NewAccountSheet = () => {
     const mutation = useCreateAccount();
 
     const onSubmit = (values: FormValues) => {
-        
+        mutation.mutate(values, {
+            onSuccess: () => onClose()
+        });
     }
 
     return (
@@ -29,7 +31,7 @@ export const NewAccountSheet = () => {
                     </SheetDescription>
                 </SheetHeader>
                 <AccountForm 
-                    disabled={false}
+                    disabled={mutation.isPending}
                     onSubmit={onSubmit} 
                     defaultValues={{ name: "" }}  
                 />
