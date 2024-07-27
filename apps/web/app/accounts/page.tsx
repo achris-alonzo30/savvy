@@ -28,6 +28,8 @@ const AccountPage = () => {
                         Add New
                     </Button>
                 </CardHeader>
+                <CardContent>
+                </CardContent>
             </Card>
         </main>
     )
