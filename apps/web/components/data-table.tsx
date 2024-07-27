@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/hooks/use-confirm-delete";
 
 
 interface DataTableProps<TData, TValue> {
@@ -47,6 +48,8 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
 
+  const [ConfirmDialog, confirm] = useConfirm("Are you sure?", "This action of deleting everything cannot be undone.");
+
   const table = useReactTable({
     data,
     columns,
@@ -67,6 +70,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <section>
+      <ConfirmDialog />
       <aside className="flex items-center py-4">
         <Input
           placeholder={`Filter ${filterKey}...`}
@@ -77,18 +81,21 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button 
+          <Button
             size="sm"
             variant="outline"
             disabled={disabled}
             className="ml-auto font-normal text-xs"
-            onClick={() => {
-              onDelete(table.getFilteredSelectedRowModel().rows)
-              table.resetRowSelection();
+            onClick={async () => {
+              const ok = await confirm();
+              if (ok) {
+                onDelete(table.getFilteredSelectedRowModel().rows)
+                table.resetRowSelection();
+              }
             }}
           >
             <Trash className="size-4 mr-2" />
-            Delete ({ table.getFilteredSelectedRowModel().rows.length})
+            Delete ({table.getFilteredSelectedRowModel().rows.length})
           </Button>
         )}
       </aside>
