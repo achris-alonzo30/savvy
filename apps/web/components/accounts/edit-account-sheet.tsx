@@ -1,26 +1,29 @@
+"use client";
+
+import { AccountForm, FormValues } from "./account-form";
+import { useOpenAccount } from "@/hooks/use-open-account";
+import { useGetAccount } from "@/actions/accounts/use-get-account";
+import { useEditAccount } from "@/actions/accounts/use-edit-account";
+
+import { Loader2 } from "lucide-react";
+
 import {
     Sheet,
     SheetTitle,
-    SheetFooter,
     SheetHeader,
     SheetContent,
     SheetDescription,
 } from "@/components/ui/sheet";
-import { useOpenAccount } from "@/hooks/use-open-account";
-import { AccountForm, FormValues } from "./account-form";
-import { useGetAccount } from "@/actions/accounts/use-get-account";
-import { useCreateAccount } from "@/actions/accounts/use-create-account";
-import { Loader2 } from "lucide-react";
-import { except } from 'drizzle-orm/pg-core';
+
 
 
 export const EditAccountSheet = () => {
     const { isOpen, onClose, id } = useOpenAccount();
 
     const accountQuery = useGetAccount(id);
+    const mutation = useEditAccount(id);
 
-    const mutation = useCreateAccount();
-
+    const isPending = mutation.isPending;
     const isLoading = accountQuery.isLoading;
 
     const onSubmit = (values: FormValues) => {
@@ -50,11 +53,10 @@ export const EditAccountSheet = () => {
                     <AccountForm
                         id={id}
                         onSubmit={onSubmit}
-                        disabled={mutation.isPending}
+                        disabled={isPending}
                         defaultValues={defaultValues}
                     />
                 )}
-
             </SheetContent>
         </Sheet>
     )
