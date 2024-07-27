@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "drizzle-kit generate:pg --schema db/schema.ts --out=./drizzle",
+    "db:generate": "drizzle-kit generate --dialect=postgresql --schema=db/schema.ts --out=./drizzle",
     "db:migrate": "bun ./scripts/migrate.ts",
     "db:studio": "drizzle-kit studio"
   },
