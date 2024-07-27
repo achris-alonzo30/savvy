@@ -10,6 +10,8 @@ import { useOpenAccount } from "@/hooks/use-open-account";
 import { AccountForm, FormValues } from "./account-form";
 import { useGetAccount } from "@/actions/accounts/use-get-account";
 import { useCreateAccount } from "@/actions/accounts/use-create-account";
+import { Loader2 } from "lucide-react";
+import { except } from 'drizzle-orm/pg-core';
 
 
 export const EditAccountSheet = () => {
@@ -18,6 +20,8 @@ export const EditAccountSheet = () => {
     const accountQuery = useGetAccount(id);
 
     const mutation = useCreateAccount();
+
+    const isLoading = accountQuery.isLoading;
 
     const onSubmit = (values: FormValues) => {
         mutation.mutate(values, {
@@ -33,16 +37,24 @@ export const EditAccountSheet = () => {
         <Sheet open={isOpen} onOpenChange={onClose}>
             <SheetContent className="space-y-4 ">
                 <SheetHeader>
-                    <SheetTitle>New Account</SheetTitle>
+                    <SheetTitle>Edit Account</SheetTitle>
                     <SheetDescription>
-                        Create a new account to start tracking transactions.
+                        Edit an existing account.
                     </SheetDescription>
                 </SheetHeader>
-                <AccountForm
-                    onSubmit={onSubmit}
-                    disabled={mutation.isPending}
-                    defaultValues={defaultValues}
-                />
+                {isLoading ? (
+                    <span className="absolute inset-0 flex items-center justify-center">
+                        <Loader2 className="size-4 text-muted-foreground animate-spin" />
+                    </span>
+                ) : (
+                    <AccountForm
+                        id={id}
+                        onSubmit={onSubmit}
+                        disabled={mutation.isPending}
+                        defaultValues={defaultValues}
+                    />
+                )}
+
             </SheetContent>
         </Sheet>
     )
