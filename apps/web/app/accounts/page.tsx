@@ -15,13 +15,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBulkDelete } from "@/actions/accounts/use-bulk-delete";
 
 
 const AccountPage = () => {
     const { onOpen } = useNewAccount();
     const accountsQuery = useGetAccounts();
+    const deleteAccounts = useBulkDelete();
 
     const accounts = accountsQuery.data ?? [];
+    const isDisabled = accountsQuery.isLoading || deleteAccounts.isPending;
 
     if (accountsQuery.isLoading) {
         return (
@@ -57,10 +60,13 @@ const AccountPage = () => {
                 </CardHeader>
                 <CardContent>
                     <DataTable
-                        disabled
                         data={accounts}
                         filterKey="email"
-                        onDelete={() => { }}
+                        onDelete={(row) => { 
+                            const ids = row.map((r) => r.original.id);
+                            deleteAccounts.mutate({ ids });
+                         }}
+                        disabled={isDisabled}
                         columns={accountColumns}
                     />
                 </CardContent>
