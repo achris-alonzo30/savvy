@@ -5,6 +5,7 @@ import { IBM_Plex_Sans } from 'next/font/google'
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { QueryProvider } from "@/providers/query-provider";
+import { SheetAccountProvider } from "@/providers/sheet-account-provider";
 
 export const ibm_plex_sans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -25,9 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className={`antialiased ${ibm_plex_sans.className}`}>
           <QueryProvider>
+            <SheetAccountProvider />
             {children}
           </QueryProvider>
         </body>
