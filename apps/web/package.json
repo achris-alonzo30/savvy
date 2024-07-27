@@ -29,12 +29,15 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@neondatabase/serverless": "^0.9.4",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",
+    "drizzle-kit": "^0.23.0",
+    "drizzle-orm": "^0.32.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.0-rc.0",
     "postcss": "^8.4.40",
