@@ -11,11 +11,9 @@ export const runtime = "edge";
 
 const app = new Hono().basePath("/api");
 
-app.route("/accounts", accounts);
-
-app.get("/", async (c) => {
-    return c.text("Hello World!");
-});
+const routes = app.route("/accounts", accounts);
 
 export const GET = handle(app);
 export const POST = handle(app);
+
+export type AppType = typeof routes;
