@@ -10,9 +10,16 @@ import { Button } from "@/components/ui/button";
 
 import { useNewAccount } from "@/hooks/use-new-account";
 import { Plus } from "lucide-react";
+import { DataTable } from "@/components/data-table";
+import { accountColumns } from "./account-columns";
+import { useGetAccounts } from "@/actions/accounts/use-get-accounts";
 
 const AccountPage = () => {
     const { onOpen } = useNewAccount();
+    const accountsQuery = useGetAccounts();
+
+    const accounts = accountsQuery.data ?? [];
+
     return (
         <main className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
             <Card className="border-none drop-shadow-sm">
@@ -29,6 +36,13 @@ const AccountPage = () => {
                     </Button>
                 </CardHeader>
                 <CardContent>
+                    <DataTable
+                        disabled
+                        data={accounts}
+                        filterKey="email"
+                        onDelete={() => {}}
+                        columns={accountColumns}
+                    />
                 </CardContent>
             </Card>
         </main>

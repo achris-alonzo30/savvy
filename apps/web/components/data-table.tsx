@@ -4,6 +4,7 @@ import { useState } from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -12,6 +13,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
+import { Trash } from "lucide-react";
 
 import {
   Table,
@@ -24,19 +27,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  filterKey: string
+  filterKey: string,
+  onDelete: (rows: Row<TData>[]) => void,
+  disabled?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterKey
+  filterKey,
+  onDelete,
+  disabled
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -47,9 +56,11 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
+      rowSelection,
     },
   });
 
@@ -65,6 +76,17 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button 
+            size="sm"
+            variant="outline"
+            disabled={disabled}
+            className="ml-auto font-normal text-xs"
+          >
+            <Trash className="size-4 mr-2" />
+            Delete ({ table.getFilteredSelectedRowModel().rows.length})
+          </Button>
+        )}
       </aside>
       <article className="rounded-md border">
         <Table>
@@ -110,10 +132,14 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </article>
-      <aside className="flex items-center justify-end space-x-2 py-4">
+      <footer className="flex items-center justify-end space-x-2 py-4">
+        <nav className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </nav>
         <Button
-          variant="outline"
           size="sm"
+          variant="outline"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -127,7 +153,7 @@ export function DataTable<TData, TValue>({
         >
           Next
         </Button>
-      </aside>
+      </footer>
     </section>
   )
 }
