@@ -14,6 +14,7 @@ import {
     SheetContent,
     SheetDescription,
 } from "@/components/ui/sheet";
+import { useDeleteAccount } from "@/actions/accounts/use-delete-account";
 
 
 
@@ -21,13 +22,14 @@ export const EditAccountSheet = () => {
     const { isOpen, onClose, id } = useOpenAccount();
 
     const accountQuery = useGetAccount(id);
-    const mutation = useEditAccount(id);
+    const editMutation = useEditAccount(id);
+    const deleteMutation = useDeleteAccount(id);
 
-    const isPending = mutation.isPending;
     const isLoading = accountQuery.isLoading;
+    const isPending = editMutation.isPending || deleteMutation.isPending;
 
     const onSubmit = (values: FormValues) => {
-        mutation.mutate(values, {
+        editMutation.mutate(values, {
             onSuccess: () => onClose()
         });
     }
@@ -55,6 +57,7 @@ export const EditAccountSheet = () => {
                         onSubmit={onSubmit}
                         disabled={isPending}
                         defaultValues={defaultValues}
+                        onDelete={() => deleteMutation.mutate()}
                     />
                 )}
             </SheetContent>
