@@ -1,8 +1,11 @@
 import { Hono } from "hono";
+import { eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
-import { accounts } from "@/db/schema";
-import { HTTPException } from "hono/http-exception";
+import { createId } from "@paralleldrive/cuid2";
+import { zValidator } from "@hono/zod-validator";
+import { accounts, insertAccountSchema } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
+
 
 const app = new Hono()
     .get("/",
@@ -10,18 +13,39 @@ const app = new Hono()
         async (c) => {
             const auth = getAuth(c);
 
-            if (!auth?.userId) {
-                throw new HTTPException(401, {
-                    res: c.json({ error: "Unauthorized" }, 401)
-                });
-            };
+            if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
 
             const data = await db.select({
                 id: accounts.id,
                 name: accounts.name
-            }).from(accounts);
+            })
+            .from(accounts)
+            .where(eq(accounts.userId, auth.userId));
 
             return c.json({ data });
-        });
+    })
+    .post("/",
+        clerkMiddleware(),
+        zValidator("json", insertAccountSchema.pick({
+            name: true
+        })),
+        async (c) => {
+            const auth = getAuth(c);
+            const val = c.req.valid("json");
+
+            if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
+
+            // SQL always returns an array
+            // But since we're doing a POST request we get a unique value
+            // So we can destructure it off the bat
+            const [data] = await db.insert(accounts).values({
+                id: createId(),
+                userId: auth.userId,
+                ...val,
+            }).returning();
+
+            return c.json({ data });
+        }
+    )
 
 export default app;
