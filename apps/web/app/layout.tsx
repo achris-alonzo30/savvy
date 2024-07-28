@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { IBM_Plex_Sans } from 'next/font/google'
 
+import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
 import { QueryProvider } from "@/providers/query-provider";
 import { SheetAccountProvider } from "@/providers/sheet-account-provider";
@@ -32,7 +33,10 @@ export default function RootLayout({
         <body className={`antialiased ${ibm_plex_sans.className}`}>
           <QueryProvider>
             <SheetAccountProvider />
-            {children}
+            <Header />
+            <main px-3 lg-px-14>
+              {children}
+            </main>
             <Toaster />
           </QueryProvider>
         </body>

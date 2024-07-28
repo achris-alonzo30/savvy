@@ -13,7 +13,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 
-export const NewAccountSheet = () => {
+export const NewCategorySheet = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const mutation = useCreateCategory();

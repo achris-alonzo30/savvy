@@ -1,7 +1,6 @@
 "use client";
 
 import { categoryColumns } from "./category-columns";
-import { useGetAccounts } from "@/actions/accounts/use-get-accounts";
 
 import {
     Card,
@@ -11,34 +10,35 @@ import {
 } from "@/components/ui/card";
 import { LoadingScreen } from "./loading-screen";
 import { DataTable } from "@/components/data-table";
-import { useBulkDeleteAccounts } from "@/actions/accounts/use-bulk-delete-accounts";
-import { NewAccountSheet } from "@/components/accounts/new-account-sheet";
+import { useGetCategories } from "@/actions/categories/use-get-categories";
+import { NewCategorySheet } from "@/components/categories/new-category-sheet";
+import { useBulkDeleteCategories } from "@/actions/categories/use-bulk-delete-categories";
 
 const CategoryPage = () => {
-    const accountsQuery = useGetAccounts();
-    const deleteAccounts = useBulkDeleteAccounts();
+    const categoriesQuery = useGetCategories();
+    const deleteCategories = useBulkDeleteCategories();
 
-    const accounts = accountsQuery.data || [];
-    const isDisabled = accountsQuery.isLoading || deleteAccounts.isPending;
+    const categories = categoriesQuery.data || [];
+    const isDisabled = categoriesQuery.isLoading || deleteCategories.isPending;
 
-    if (accountsQuery.isLoading) return <LoadingScreen />;
+    if (categoriesQuery.isLoading) return <LoadingScreen />;
 
     return (
         <main className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">
-                        Accounts
+                        Categories
                     </CardTitle>
-                    <NewAccountSheet />
+                    <NewCategorySheet />
                 </CardHeader>
                 <CardContent>
                     <DataTable
-                        data={accounts}
+                        data={categories}
                         filterKey="name"
                         onDelete={(row) => {
                             const ids = row.map((r) => r.original.id);
-                            deleteAccounts.mutate({ ids });
+                            deleteCategories.mutate({ ids });
                         }}
                         disabled={isDisabled}
                         columns={categoryColumns}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useDeleteAccount } from "@/actions/accounts/use-delete-account";
+import { useDeleteCategory } from "@/actions/categories/use-delete-category";
 
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
@@ -12,15 +12,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { EditAccountSheet } from "@/components/accounts/edit-account-sheet";
-import { DeleteAccountDialog } from "@/components/accounts/delete-account-dialog";
+import { EditCategorySheet } from "@/components/categories/edit-category-sheet";
+import { DeleteCategoryDialog } from "@/components/categories/delete-category-dialog";
 
 export const CategoryActions = ({ id }: { id: string }) => {
     const [dropdownState, setDropdownState] = useState(false);
     const [editState, setEditState] = useState(false);
     const [alertState, setAlertState] = useState(false);
 
-    const deleteMutation = useDeleteAccount(id);
+    const deleteMutation = useDeleteCategory(id);
 
     return (
         <>
@@ -57,12 +57,12 @@ export const CategoryActions = ({ id }: { id: string }) => {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <EditAccountSheet
+            <EditCategorySheet
                 id={id}
                 isOpen={editState}
                 setIsOpen={setEditState}
             />
-            <DeleteAccountDialog
+            <DeleteCategoryDialog
                 isOpen={alertState}
                 setIsOpen={setAlertState}
                 disabled={deleteMutation.isPending}

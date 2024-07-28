@@ -18,9 +18,9 @@ type DeleteCategoryDialogProps = {
     setIsOpen: (isOpen: boolean) => void;
 }
 
-export const DeleteCategoryDialog = ({ 
-    isOpen, 
-    disabled, 
+export const DeleteCategoryDialog = ({
+    isOpen,
+    disabled,
     setIsOpen,
     deleteAccount
 }: DeleteCategoryDialogProps) => {
@@ -36,12 +36,12 @@ export const DeleteCategoryDialog = ({
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                         This action cannot be undone. This will permanently delete your
-                        account and remove your data from our servers.
+                        category and remove your data from our servers.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
+                    <AlertDialogAction
                         disabled={disabled}
                         onClick={handleDelete}
                     >Continue</AlertDialogAction>
