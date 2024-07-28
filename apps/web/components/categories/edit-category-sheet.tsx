@@ -1,8 +1,8 @@
 "use client";
 
-import { AccountForm, FormValues } from "./account-form";
-import { useGetAccount } from "@/actions/accounts/use-get-account";
-import { useEditAccount } from "@/actions/accounts/use-edit-account";
+import { CategoryForm, FormValues } from "./category-form";
+import { useGetCategory } from "@/actions/categories/use-get-category";
+import { useEditCategory } from "@/actions/categories/use-edit-category";
 
 import { Loader2 } from "lucide-react";
 
@@ -13,24 +13,24 @@ import {
     SheetContent,
     SheetDescription,
 } from "@/components/ui/sheet";
-import { useDeleteAccount } from "@/actions/accounts/use-delete-account";
+import { useDeleteCategory } from "@/actions/categories/use-delete-category";
 
-type EditAccountSheetProps = {
+type EditCategorySheetProps = {
     id: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
 
-export const EditAccountSheet = ({ 
+export const EditCategorySheet = ({ 
     id,
     isOpen, 
     setIsOpen,
-}: EditAccountSheetProps) => {
-    const accountQuery = useGetAccount(id);
-    const editMutation = useEditAccount(id);
-    const deleteMutation = useDeleteAccount(id);
+}: EditCategorySheetProps) => {
+    const categoryQuery = useGetCategory(id);
+    const editMutation = useEditCategory(id);
+    const deleteMutation = useDeleteCategory(id);
 
-    const isLoading = accountQuery.isLoading;
+    const isLoading = categoryQuery.isLoading;
     const isPending = editMutation.isPending || deleteMutation.isPending;
 
     const onSubmit = (values: FormValues) => {
@@ -44,8 +44,8 @@ export const EditAccountSheet = ({
         setIsOpen(false);
     }
 
-    const defaultValues = accountQuery.data ? {
-        name: accountQuery.data.name
+    const defaultValues = categoryQuery.data ? {
+        name: categoryQuery.data.name
     } : { name: "" }
 
     return (
@@ -53,9 +53,9 @@ export const EditAccountSheet = ({
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetContent className="space-y-4 ">
                     <SheetHeader>
-                        <SheetTitle>Edit Account</SheetTitle>
+                        <SheetTitle>Edit Category</SheetTitle>
                         <SheetDescription>
-                            Edit an existing account.
+                            Edit an existing category.
                         </SheetDescription>
                     </SheetHeader>
                     {isLoading ? (
@@ -63,7 +63,7 @@ export const EditAccountSheet = ({
                             <Loader2 className="size-4 text-muted-foreground animate-spin" />
                         </span>
                     ) : (
-                        <AccountForm
+                        <CategoryForm
                             id={id}
                             onSubmit={onSubmit}
                             disabled={isPending}
