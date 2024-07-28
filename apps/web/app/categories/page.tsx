@@ -1,6 +1,6 @@
 "use client";
 
-import { accountColumns } from "./account-columns";
+import { categoryColumns } from "./category-columns";
 import { useGetAccounts } from "@/actions/accounts/use-get-accounts";
 
 import {
@@ -14,7 +14,7 @@ import { DataTable } from "@/components/data-table";
 import { useBulkDeleteAccounts } from "@/actions/accounts/use-bulk-delete-accounts";
 import { NewAccountSheet } from "@/components/accounts/new-account-sheet";
 
-const AccountPage = () => {
+const CategoryPage = () => {
     const accountsQuery = useGetAccounts();
     const deleteAccounts = useBulkDeleteAccounts();
 
@@ -41,7 +41,7 @@ const AccountPage = () => {
                             deleteAccounts.mutate({ ids });
                         }}
                         disabled={isDisabled}
-                        columns={accountColumns}
+                        columns={categoryColumns}
                     />
                 </CardContent>
             </Card>
@@ -49,4 +49,4 @@ const AccountPage = () => {
     )
 }
 
-export default AccountPage;
+export default CategoryPage;

@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { EditAccountSheet } from "@/components/accounts/edit-account-sheet";
 import { DeleteAccountDialog } from "@/components/accounts/delete-account-dialog";
 
-export const AccountActions = ({ id }: { id: string }) => {
+export const CategoryActions = ({ id }: { id: string }) => {
     const [dropdownState, setDropdownState] = useState(false);
     const [editState, setEditState] = useState(false);
     const [alertState, setAlertState] = useState(false);

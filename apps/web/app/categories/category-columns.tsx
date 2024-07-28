@@ -8,11 +8,11 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { AccountActions } from "./account-actions";
+import { CategoryActions } from "./category-actions";
 
 export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"][0];
 
-export const accountColumns: ColumnDef<ResponseType>[] = [
+export const categoryColumns: ColumnDef<ResponseType>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -51,6 +51,6 @@ export const accountColumns: ColumnDef<ResponseType>[] = [
     {
         id: "actions",
         header: () => <p className="pl-2">Actions</p>,
-        cell: ({ row }) => <AccountActions id={row.original.id} />
+        cell: ({ row }) => <CategoryActions id={row.original.id} />
     }
 ]

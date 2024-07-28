@@ -4,7 +4,7 @@ import { db } from "@/db/drizzle";
 import { eq, and, inArray } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { zValidator } from "@hono/zod-validator";
-import { accounts, insertAccountSchema } from "@/db/schema";
+import { categories, insertCategorySchema } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 
 
@@ -17,11 +17,11 @@ const app = new Hono()
             if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
 
             const data = await db.select({
-                id: accounts.id,
-                name: accounts.name
+                id: categories.id,
+                name: categories.name
             })
-                .from(accounts)
-                .where(eq(accounts.userId, auth.userId));
+                .from(categories)
+                .where(eq(categories.userId, auth.userId));
 
             return c.json({ data });
     })
@@ -40,14 +40,14 @@ const app = new Hono()
 
             const [data] = await db
                 .select({
-                    id: accounts.id,
-                    name: accounts.name
+                    id: categories.id,
+                    name: categories.name
                 })
-                .from(accounts)
+                .from(categories)
                 .where(
                     and(
-                        eq(accounts.id, id),
-                        eq(accounts.userId, auth.userId)
+                        eq(categories.id, id),
+                        eq(categories.userId, auth.userId)
                     )
                 );
             
@@ -58,7 +58,7 @@ const app = new Hono()
     )
     .post("/",
         clerkMiddleware(),
-        zValidator("json", insertAccountSchema.pick({
+        zValidator("json", insertCategorySchema.pick({
             name: true
         })),
         async (c) => {
@@ -70,7 +70,7 @@ const app = new Hono()
             // SQL always returns an array
             // But since we're doing a POST request we get a unique value
             // So we can destructure it off the bat
-            const [data] = await db.insert(accounts).values({
+            const [data] = await db.insert(categories).values({
                 id: createId(),
                 userId: auth.userId,
                 ...val,
@@ -94,15 +94,15 @@ const app = new Hono()
             if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
 
             const data = await db
-                .delete(accounts)
+                .delete(categories)
                 .where(
                     and(
-                        eq(accounts.userId, auth.userId),
-                        inArray(accounts.id, val.ids)
+                        eq(categories.userId, auth.userId),
+                        inArray(categories.id, val.ids)
                     )
                 )
                 .returning({
-                    id: accounts.id
+                    id: categories.id
                 });
 
             return c.json({ data });
@@ -113,7 +113,7 @@ const app = new Hono()
         zValidator("param", z.object({
             id: z.string().optional(),
         })),
-        zValidator("json", insertAccountSchema.pick({
+        zValidator("json", insertCategorySchema.pick({
             name: true
         })),
         async (c) => {
@@ -125,12 +125,12 @@ const app = new Hono()
             if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
 
             const [data] = await db
-                .update(accounts)
+                .update(categories)
                 .set(val)
                 .where(
                     and(
-                        eq(accounts.id, id),
-                        eq(accounts.userId, auth.userId)
+                        eq(categories.id, id),
+                        eq(categories.userId, auth.userId)
                     )
                 )
                 .returning();
@@ -153,14 +153,14 @@ const app = new Hono()
             if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
 
             const [data] = await db
-                .delete(accounts)
+                .delete(categories)
                 .where(
                     and(
-                        eq(accounts.id, id),
-                        eq(accounts.userId, auth.userId)
+                        eq(categories.id, id),
+                        eq(categories.userId, auth.userId)
                     )
                 )
-                .returning({ id: accounts.id });
+                .returning({ id: categories.id });
 
             if (!data) return c.json({ error: "Not found" }, 404);
 

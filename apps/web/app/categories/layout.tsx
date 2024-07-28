@@ -1,6 +1,6 @@
 import { Header } from "../../components/header";
 
-const AccountLayout = ({ children }: { children: React.ReactNode }) => {
+const CategoryLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             <Header />
@@ -11,4 +11,4 @@ const AccountLayout = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export default AccountLayout;
+export default CategoryLayout;

@@ -16,3 +16,4 @@ export const categories = pgTable("categories", {
 });
 
 export const insertAccountSchema = createInsertSchema(accounts);
+export const insertCategorySchema = createInsertSchema(categories);
