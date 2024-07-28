@@ -12,7 +12,7 @@ export const useEditAccount = (id?: string) => {
 
     const mutation = useMutation<ResponseType, Error, RequestType>({
         mutationFn: async (json) => {
-            const res = await client.api.accounts[":id"]["$patch"]({ param: { id }, json });
+            const res = await client.api.accounts[":id"]["$patch"]({  json, param: { id } });
             return await res.json();
         },
         onSuccess: () => {

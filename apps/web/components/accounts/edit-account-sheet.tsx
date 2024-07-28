@@ -1,8 +1,6 @@
 "use client";
 
-import { useConfirm } from "@/hooks/use-confirm-delete";
 import { AccountForm, FormValues } from "./account-form";
-import { useOpenAccount } from "@/hooks/use-open-account";
 import { useGetAccount } from "@/actions/accounts/use-get-account";
 import { useEditAccount } from "@/actions/accounts/use-edit-account";
 
@@ -14,16 +12,21 @@ import {
     SheetHeader,
     SheetContent,
     SheetDescription,
+    SheetTrigger,
 } from "@/components/ui/sheet";
 import { useDeleteAccount } from "@/actions/accounts/use-delete-account";
 
+type EditAccountSheetProps = {
+    id: string;
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+}
 
-
-export const EditAccountSheet = () => {
-    const { isOpen, onClose, id } = useOpenAccount();
-
-    const [ConfirmDialog, confirm] = useConfirm("Are you sure you want to delete this account?", "Deleting an account cannot be undone.");
-
+export const EditAccountSheet = ({ 
+    id,
+    isOpen, 
+    setIsOpen,
+}: EditAccountSheetProps) => {
     const accountQuery = useGetAccount(id);
     const editMutation = useEditAccount(id);
     const deleteMutation = useDeleteAccount(id);
@@ -33,16 +36,13 @@ export const EditAccountSheet = () => {
 
     const onSubmit = (values: FormValues) => {
         editMutation.mutate(values, {
-            onSuccess: () => onClose()
+            onSuccess: () => setIsOpen(false)
         });
     }
 
-    const onDelete = async () => {
-        const ok = await confirm();
-
-        if (ok) deleteMutation.mutate(undefined, {
-            onSuccess: () => onClose()
-        })
+    const handleDelete = () => {
+        deleteMutation.mutate();
+        setIsOpen(false);
     }
 
     const defaultValues = accountQuery.data ? {
@@ -51,8 +51,7 @@ export const EditAccountSheet = () => {
 
     return (
         <>
-            <ConfirmDialog />
-            <Sheet open={isOpen} onOpenChange={onClose}>
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetContent className="space-y-4 ">
                     <SheetHeader>
                         <SheetTitle>Edit Account</SheetTitle>
@@ -67,9 +66,9 @@ export const EditAccountSheet = () => {
                     ) : (
                         <AccountForm
                             id={id}
-                            onDelete={onDelete}
                             onSubmit={onSubmit}
                             disabled={isPending}
+                            onDelete={handleDelete}
                             defaultValues={defaultValues}
                         />
                     )}

@@ -40,7 +40,7 @@ export const accountColumns: ColumnDef<ResponseType>[] = [
             return (
                 <Button
                     variant="ghost"
-                    className="p-0 border-none bg-transparent"
+                    className="px-0 py-0 border-none hover:bg-transparent"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Name
@@ -51,6 +51,7 @@ export const accountColumns: ColumnDef<ResponseType>[] = [
     },
     {
         id: "actions",
+        header: () => <p className="pl-2">Actions</p>,
         cell: ({ row }) => <AccountActions id={row.original.id} />
     }
 ]
