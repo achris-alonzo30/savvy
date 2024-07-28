@@ -9,7 +9,7 @@ export const useGetAccounts = () => {
             const res = await client.api.accounts.$get();
 
             // You need to handle errors
-            if (!res.ok) throw new Error("Failed to fetch accounts");
+            if (!res.ok) throw new Error("Failed to fetch accounts.");
 
             const { data } = await res.json();
 

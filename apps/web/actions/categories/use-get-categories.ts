@@ -9,7 +9,7 @@ export const useGetCategories = () => {
             const res = await client.api.categories.$get();
 
             // You need to handle errors
-            if (!res.ok) throw new Error("Failed to fetch categories");
+            if (!res.ok) throw new Error("Failed to fetch categories.");
 
             const { data } = await res.json();
 

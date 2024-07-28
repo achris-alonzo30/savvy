@@ -18,7 +18,7 @@ export const useEditCategory = (id?: string) => {
         onSuccess: () => {
             toast({
                 title: "Category updated",
-                description: "Category updated successfully",
+                description: "Category updated successfully.",
                 variant: "default"
             })
             queryClient.invalidateQueries({ queryKey: ["category", { id }] });
@@ -28,7 +28,7 @@ export const useEditCategory = (id?: string) => {
         onError: () => {
             toast({
                 title: "Error",
-                description: "Failed to update category",
+                description: "Failed to update category.",
                 variant: "destructive"
             })
         }

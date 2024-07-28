@@ -18,7 +18,7 @@ export const useCreateAccount = () => {
         onSuccess: () => {
             toast({
                 title: "Account created",
-                description: "Account created successfully",
+                description: "Account created successfully.",
                 variant: "default"
             })
             queryClient.invalidateQueries({ queryKey: ["accounts"] });
@@ -26,7 +26,7 @@ export const useCreateAccount = () => {
         onError: () => {
             toast({
                 title: "Error",
-                description: "Failed to create account",
+                description: "Failed to create account.",
                 variant: "destructive"
             })
         }

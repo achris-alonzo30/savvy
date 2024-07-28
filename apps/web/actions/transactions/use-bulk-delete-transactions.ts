@@ -4,31 +4,30 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/hono";
 import { toast } from "@/components/ui/use-toast";
 
-type ResponseType = InferResponseType<typeof client.api.accounts[":id"]["$patch"]>;
-type RequestType = InferRequestType<typeof client.api.accounts[":id"]["$patch"]>["json"];
+type ResponseType = InferResponseType<typeof client.api.transactions["bulk-delete"]["$post"]>;
+type RequestType = InferRequestType<typeof client.api.transactions["bulk-delete"]["$post"]>["json"];
 
-export const useEditAccount = (id?: string) => {
+export const useBulkDeleteTransactions = () => {
     const queryClient = useQueryClient();
 
     const mutation = useMutation<ResponseType, Error, RequestType>({
         mutationFn: async (json) => {
-            const res = await client.api.accounts[":id"]["$patch"]({  json, param: { id } });
+            const res = await client.api.transactions["bulk-delete"]["$post"]({ json });
             return await res.json();
         },
         onSuccess: () => {
             toast({
-                title: "Account updated",
-                description: "Account updated successfully.",
+                title: "Transactions deleted",
+                description: "Transactions deleted successfully.",
                 variant: "default"
             })
-            queryClient.invalidateQueries({ queryKey: ["account", { id }] });
-            queryClient.invalidateQueries({ queryKey: ["accounts"] });
-            // TODO: Invalidate Summary and Transactions
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
+            // TODO: Invalidate Summary
         },
         onError: () => {
             toast({
                 title: "Error",
-                description: "Failed to update account.",
+                description: "Failed to delete transaction.",
                 variant: "destructive"
             })
         }

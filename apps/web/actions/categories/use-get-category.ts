@@ -10,7 +10,7 @@ export const useGetCategory = (id?: string) => {
             const res = await client.api.categories[":id"].$get({ param: { id }});
 
             // You need to handle errors
-            if (!res.ok) throw new Error("Failed to fetch category");
+            if (!res.ok) throw new Error("Failed to fetch category.");
 
             const { data } = await res.json();
 

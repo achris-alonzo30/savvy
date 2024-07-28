@@ -17,7 +17,7 @@ export const useDeleteCategory = (id?: string) => {
         onSuccess: () => {
             toast({
                 title: "Category deleted",
-                description: "Category deleted successfully",
+                description: "Category deleted successfully.",
                 variant: "default"
             })
             queryClient.invalidateQueries({ queryKey: ["category", { id }] });
@@ -27,7 +27,7 @@ export const useDeleteCategory = (id?: string) => {
         onError: () => {
             toast({
                 title: "Error",
-                description: "Failed to delete category",
+                description: "Failed to delete category.",
                 variant: "destructive"
             })
         }
