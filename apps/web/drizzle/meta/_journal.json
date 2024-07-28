@@ -15,6 +15,13 @@
       "when": 1722167175011,
       "tag": "0001_nostalgic_blindfold",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1722181313430,
+      "tag": "0002_mighty_malcolm_colcord",
+      "breakpoints": true
     }
   ]
 }

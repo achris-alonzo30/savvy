@@ -6,6 +6,7 @@ import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 
 import accounts from "./accounts";
 import categories from "./categories";
+import transactions from "./transactions"
 import { HTTPException } from "hono/http-exception";
 
 // You can use `edge` or `node`
@@ -22,6 +23,7 @@ app.onError((err, c) => {
 const routes = app
     .route("/accounts", accounts)
     .route("/categories", categories)
+    .route("/transactions", transactions);
 
 export const GET = handle(app);
 export const POST = handle(app);
