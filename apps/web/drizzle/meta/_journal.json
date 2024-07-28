@@ -8,6 +8,13 @@
       "when": 1722101435905,
       "tag": "0000_natural_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1722167175011,
+      "tag": "0001_nostalgic_blindfold",
+      "breakpoints": true
     }
   ]
 }

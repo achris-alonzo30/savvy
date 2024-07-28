@@ -5,6 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 
 import accounts from "./accounts";
+import categories from "./categories";
 import { HTTPException } from "hono/http-exception";
 
 // You can use `edge` or `node`
@@ -18,7 +19,9 @@ app.onError((err, c) => {
     return c.json({ error: "Internal Server Error" }, 500)
 })
 
-const routes = app.route("/accounts", accounts);
+const routes = app
+    .route("/accounts", accounts)
+    .route("/categories", categories)
 
 export const GET = handle(app);
 export const POST = handle(app);

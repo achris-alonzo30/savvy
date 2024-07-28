@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { DeleteAccountDialog } from "./accounts/delete-account-dialog";
 
 
 interface DataTableProps<TData, TValue> {
@@ -33,7 +34,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[],
   filterKey: string,
   onDelete: (rows: Row<TData>[]) => void,
-  disabled?: boolean;
+  disabled: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,7 +47,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
-
+  const [isOpen, setIsOpen] = useState(false);
   const table = useReactTable({
     data,
     columns,
@@ -64,9 +65,20 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const handleDelete = () => {
+    onDelete(table.getFilteredSelectedRowModel().rows)
+    table.resetRowSelection();
+    setIsOpen(false);
+  }
 
   return (
     <section>
+      <DeleteAccountDialog 
+        isOpen={isOpen}
+        disabled={disabled}
+        setIsOpen={setIsOpen}
+        deleteAccount={handleDelete}
+      />
       <aside className="flex items-center py-4">
         <Input
           placeholder={`Filter ${filterKey}...`}
@@ -82,10 +94,7 @@ export function DataTable<TData, TValue>({
             variant="outline"
             disabled={disabled}
             className="ml-auto font-normal text-xs"
-            onClick={async () => {
-              onDelete(table.getFilteredSelectedRowModel().rows)
-              table.resetRowSelection();
-            }}
+            onClick={() => setIsOpen(true)}
           >
             <Trash className="size-4 mr-2" />
             Delete ({table.getFilteredSelectedRowModel().rows.length})
