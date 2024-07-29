@@ -1,6 +1,6 @@
 "use client";
 
-import { transactionColumns } from "./transaction-columns";
+import { useState } from "react";
 
 import {
     Card,
@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/card";
 import { LoadingScreen } from "./loading-screen";
 import { DataTable } from "@/components/data-table";
+import { UploadButton } from "@/components/upload-button";
+import { transactionColumns } from "./transaction-columns";
+import { TransactionImportCard } from "./transaction-import-card";
 import { useGetTransactions } from "@/actions/transactions/use-get-transactions";
 import { NewTransactionSheet } from "@/components/transactions/new-transaction-sheet";
 import { useBulkDeleteTransactions } from "@/actions/transactions/use-bulk-delete-transactions";
-import { useState } from "react";
-import { UploadButton } from "@/components/upload-button";
 
 enum VARIANTS {
     LIST = "LIST",
@@ -31,6 +32,17 @@ const INITIAL_IMPORT_RESULTS = {
 
 const TransactionPage = () => {
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+    const [importResults, setImportResults] = useState<typeof INITIAL_IMPORT_RESULTS>(INITIAL_IMPORT_RESULTS);
+
+    const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
+        setImportResults(results);
+        setVariant(VARIANTS.IMPORT);
+    }
+
+    const onCancelImport = () => {
+        setImportResults(INITIAL_IMPORT_RESULTS);
+        setVariant(VARIANTS.LIST);
+    }
 
     const transactionQuery = useGetTransactions();
     const deleteTransactions = useBulkDeleteTransactions();
@@ -42,7 +54,13 @@ const TransactionPage = () => {
 
     if (variant === VARIANTS.IMPORT) {
         return (
-            <>Import</>
+            <main className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
+                <TransactionImportCard
+                    data={importResults.data}
+                    onCancel={onCancelImport}
+                    onSubmit={onCancelImport}
+                />
+            </main>
         )
     }
 
@@ -53,8 +71,10 @@ const TransactionPage = () => {
                     <CardTitle className="text-xl line-clamp-1">
                         Transactions
                     </CardTitle>
-                    <NewTransactionSheet />
-                    <UploadButton />
+                    <aside className="flex flex-col lg:flex-row items-center gap-2">
+                        <UploadButton onUpload={onUpload}/>
+                        <NewTransactionSheet />
+                    </aside>
                 </CardHeader>
                 <CardContent>
                     <DataTable
