@@ -1,3 +1,4 @@
+"use client";
 
 import { useState } from "react";
 import {
@@ -7,13 +8,19 @@ import {
     CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { TransactionImportTable } from "./transaction-import-table";
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss";
 const outputFormat = "yyyy-MM-dd";
 
-interface SelectedColumnStte {
+const requiredOptions = [
+    "amount", "date", "payee"
+]
+
+export interface SelectedColumnState {
     [key: string]: string | null;
 }
+
 
 type TransactionImportCardProps = {
     data: string[][];
@@ -25,11 +32,26 @@ export const TransactionImportCard = ({
     onCancel,
     onSubmit
 } : TransactionImportCardProps ) => {
-    const [selectedColumn, setSelectedColumn] = useState<SelectedColumnStte>({});
+    const [selectedColumn, setSelectedColumn] = useState<SelectedColumnState>({});
 
     const headers = data[0];
     const body = data.slice(1);
 
+    const onTableHeadSelectChange = (columnIndex: number, value: string | null) => {
+        setSelectedColumn((prev) => {
+            const newSelectedColumns = {...prev};
+            for (const key in newSelectedColumns) {
+                if (newSelectedColumns[key] === value) {
+                    newSelectedColumns[key] = null;
+                }
+            }
+
+            if (value === "skip") value = null;
+
+            newSelectedColumns[`column_${columnIndex}`] = value;
+            return newSelectedColumns;
+        })
+    }
 
     return (
         <Card className="border-none drop-shadow-sm">
@@ -45,11 +67,11 @@ export const TransactionImportCard = ({
                     </Button>
                 </CardHeader>
                 <CardContent>
-                    <ImportTable 
+                    <TransactionImportTable 
                         body={body}
                         headers={headers}
                         selectedColumn={selectedColumn}
-                        onTableHeadSelectChange={() => {}}
+                        onTableHeadSelectChange={onTableHeadSelectChange}
                     />
                 </CardContent>
         </Card>
