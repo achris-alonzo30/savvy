@@ -19,6 +19,7 @@ import {
 import { Button } from "../ui/button";
 import { Loader2, Plus } from "lucide-react";
 
+
 export const NewTransactionSheet = () => {
 
     const [isOpen, setIsOpen] = useState(false);
@@ -76,14 +77,7 @@ export const NewTransactionSheet = () => {
                 ) : (
                     <TransactionForm
                         onSubmit={onSubmit}
-                        disabled={false}
-                        defaultValues={{
-                            payee: "",
-                            amount: 0,
-                            date: new Date(),
-                            accountId: "",
-                            categoryId: "",
-                        }}
+                        disabled={isPending}
                         categoryOptions={categoryOptions}
                         onCreateCategory={onCreateCategory}
                         accountOptions={accountOptions}

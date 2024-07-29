@@ -21,29 +21,30 @@ import { DeleteTransactionDialog } from "./delete-transaction-dialog";
 import { DatePicker } from "../date-picker";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { AmountInput } from "../amount-input";
+import { convertAmtToMilUnits } from '../../lib/utils';
 
 
 
 const formSchema = z.object({
     payee: z.string(),
-    amount: z.number(),
+    amount: z.string(),
     date: z.coerce.date(),
     accountId: z.string(),
     notes: z.string().nullable().optional(),
     categoryId: z.string().nullable().optional(),
 });
 
-
 const apiSchema = insertTransactionSchema.omit({ id: true });
 
-export type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.input<typeof formSchema>;
 export type ApiFormValues = z.input<typeof apiSchema>
 
 type TransactionFormProps = {
     id?: string;
     disabled?: boolean;
     onDelete?: () => void;
-    defaultValues: FormValues;
+    defaultValues?: FormValues;
     onCreateAccount: (name: string) => void;
     onCreateCategory: (name: string) => void;
     onSubmit: (values: ApiFormValues) => void;
@@ -70,7 +71,13 @@ export const TransactionForm = ({
     });
 
     const handleSubmit = (values: FormValues) => {
-        onSubmit(values);
+        // You can easily convert other types to your previous predefined types
+        const amount = parseFloat(values.amount);
+        const amountInMiliUnits = convertAmtToMilUnits(amount);
+        onSubmit({
+            ...values,
+            amount: amountInMiliUnits
+        });
     }
 
     const handleDelete = () => onDelete?.();
@@ -160,16 +167,16 @@ export const TransactionForm = ({
                         )}
                     />
                     <FormField
-                        name="payee"
+                        name="amount"
                         control={form.control}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Payee</FormLabel>
+                                <FormLabel>Amount Spent</FormLabel>
                                 <FormControl>
-                                    <Input
+                                    <AmountInput
                                         {...field}
                                         disabled={disabled}
-                                        placeholder="Add a payee..."
+                                        placeholder="0.00"
                                     />
                                 </FormControl>
                                 <FormMessage />
