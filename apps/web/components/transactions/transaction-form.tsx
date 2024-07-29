@@ -18,6 +18,9 @@ import {
 import { Select } from "../select";
 import { Button } from "@/components/ui/button";
 import { DeleteTransactionDialog } from "./delete-transaction-dialog";
+import { DatePicker } from "../date-picker";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 
 
@@ -74,7 +77,7 @@ export const TransactionForm = ({
 
     return (
         <>
-            <DeleteTransactionDialog 
+            <DeleteTransactionDialog
                 isOpen={isOpen}
                 disabled={disabled}
                 setIsOpen={setIsOpen}
@@ -82,14 +85,31 @@ export const TransactionForm = ({
             />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-4">
-                <FormField
+                    <FormField
+                        name="date"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Transaction Date</FormLabel>
+                                <FormControl>
+                                    <DatePicker
+                                        disabled={disabled}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
                         name="accountId"
                         control={form.control}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Account</FormLabel>
                                 <FormControl>
-                                    <Select 
+                                    <Select
                                         placeholder="Select an account"
                                         options={accountOptions}
                                         onCreate={onCreateAccount}
@@ -109,7 +129,7 @@ export const TransactionForm = ({
                             <FormItem>
                                 <FormLabel>Category</FormLabel>
                                 <FormControl>
-                                    <Select 
+                                    <Select
                                         placeholder="Select an category"
                                         options={categoryOptions}
                                         onCreate={onCreateCategory}
@@ -117,6 +137,58 @@ export const TransactionForm = ({
                                         onChange={field.onChange}
                                         disabled={disabled}
                                     />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="payee"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Payee</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        disabled={disabled}
+                                        placeholder="Add a payee..."
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="payee"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Payee</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        disabled={disabled}
+                                        placeholder="Add a payee..."
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="notes"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Notes</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        {...field}
+                                        rows={5}
+                                        value={field.value || ""}
+                                        placeholder="(Optional) Add a note..."
+                                    ></Textarea>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
