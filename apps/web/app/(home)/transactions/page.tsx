@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import { transactions as transactionsSchema } from "@/db/schema";
 import {
     Card,
     CardTitle,
@@ -16,6 +16,7 @@ import { TransactionImportCard } from "./transaction-import-card";
 import { useGetTransactions } from "@/actions/transactions/use-get-transactions";
 import { NewTransactionSheet } from "@/components/transactions/new-transaction-sheet";
 import { useBulkDeleteTransactions } from "@/actions/transactions/use-bulk-delete-transactions";
+import { SelectAccountDialog } from "./select-account-dialog";
 
 enum VARIANTS {
     LIST = "LIST",
@@ -25,14 +26,20 @@ enum VARIANTS {
 const INITIAL_IMPORT_RESULTS = {
     data: [],
     errors: [],
-    meta: {
-
-    }
+    meta: {}
 }
 
 const TransactionPage = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [accountId, setAccountId] = useState<string>("");
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
     const [importResults, setImportResults] = useState<typeof INITIAL_IMPORT_RESULTS>(INITIAL_IMPORT_RESULTS);
+
+    const transactionQuery = useGetTransactions();
+    const deleteTransactions = useBulkDeleteTransactions();
+
+    const transactions = transactionQuery.data || [];
+    const isDisabled = transactionQuery.isLoading || deleteTransactions.isPending;
 
     const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
         setImportResults(results);
@@ -44,17 +51,21 @@ const TransactionPage = () => {
         setVariant(VARIANTS.LIST);
     }
 
-    const transactionQuery = useGetTransactions();
-    const deleteTransactions = useBulkDeleteTransactions();
+    const onSubmitImport = async (values: typeof transactionsSchema.$inferInsert[]) => {
+        
+    }
 
-    const transactions = transactionQuery.data || [];
-    const isDisabled = transactionQuery.isLoading || deleteTransactions.isPending;
-
+    // TODO: Create Bulk Create Transaction after importing csv files
     if (transactionQuery.isLoading) return <LoadingScreen />;
-
+    console.log(variant)
     if (variant === VARIANTS.IMPORT) {
         return (
             <main className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
+                <SelectAccountDialog
+                    setAccountId={setAccountId}
+                    setIsOpen={setIsOpen}
+                    isOpen={isOpen}
+                />
                 <TransactionImportCard
                     data={importResults.data}
                     onCancel={onCancelImport}

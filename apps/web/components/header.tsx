@@ -10,7 +10,6 @@ import { Loader2 } from "lucide-react";
 import { Logo } from "./logo";
 import { Navigation } from "./navigation";
 import { WelcomeMsg } from "./welcome-msg";
-import { Button } from "@/components/ui/button";
 
 export const Header = () => {
     return (

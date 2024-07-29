@@ -11,7 +11,7 @@ export const UploadButton = ({
     // TODO: Add a paywall
 
     return (
-        <CSVReader>
+        <CSVReader onUploadAccepted={onUpload}>
             {({getRootProps}: any) => (
                 <Button
                     size="sm"

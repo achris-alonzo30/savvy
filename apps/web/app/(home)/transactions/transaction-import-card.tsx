@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { format, parse } from "date-fns";
+import { convertAmtToMilUnits } from "@/lib/utils";
+
 import {
     Card,
     CardTitle,
@@ -9,8 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TransactionImportTable } from "./transaction-import-table";
-import { convertAmtToMilUnits } from "@/lib/utils";
-import { format, parse } from "date-fns";
+
+
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss";
 const outputFormat = "yyyy-MM-dd";
@@ -62,6 +65,7 @@ export const TransactionImportCard = ({
             return column.split("_")[1];
         };
 
+        // Create a new array to store the selected columns
         const mappedData = {
             headers: headers.map((_h, i) => {
                 const columnIndex = getColumnIndex(`column_${i}`);
@@ -77,6 +81,7 @@ export const TransactionImportCard = ({
             }).filter((row) => row.length > 0)
         }
 
+        // filter out the without null values
         const arrayOfData = mappedData.body.map((row) => {
             return row.reduce((acc: any, cell, index) => {
                 const header = mappedData.headers[index];
