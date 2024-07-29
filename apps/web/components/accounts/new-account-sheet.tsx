@@ -1,17 +1,19 @@
+"use client";
+
+import { useState } from "react";
+import { AccountForm, FormValues } from "./account-form";
+import { useCreateAccount } from "@/actions/accounts/use-create-account";
+
 import {
     Sheet,
     SheetTitle,
-    SheetFooter,
     SheetHeader,
+    SheetTrigger,
     SheetContent,
     SheetDescription,
-    SheetTrigger,
 } from "@/components/ui/sheet";
-import { AccountForm, FormValues } from "./account-form";
-import { useCreateAccount } from "@/actions/accounts/use-create-account";
-import { useState } from "react";
-import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { Button } from "../ui/button";
 
 export const NewAccountSheet = () => {
 

@@ -3,6 +3,7 @@
 import { CategoryForm, FormValues } from "./category-form";
 import { useGetCategory } from "@/actions/categories/use-get-category";
 import { useEditCategory } from "@/actions/categories/use-edit-category";
+import { useDeleteCategory } from "@/actions/categories/use-delete-category";
 
 import { Loader2 } from "lucide-react";
 
@@ -13,7 +14,7 @@ import {
     SheetContent,
     SheetDescription,
 } from "@/components/ui/sheet";
-import { useDeleteCategory } from "@/actions/categories/use-delete-category";
+
 
 type EditCategorySheetProps = {
     id: string;

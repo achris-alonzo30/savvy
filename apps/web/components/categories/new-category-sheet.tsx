@@ -1,17 +1,20 @@
+"use client";
+
+import { useState } from "react";
+import { CategoryForm, FormValues } from "./category-form";
+import { useCreateCategory } from "@/actions/categories/use-create-category";
+
 import {
     Sheet,
     SheetTitle,
-    SheetFooter,
     SheetHeader,
+    SheetTrigger,
     SheetContent,
     SheetDescription,
-    SheetTrigger,
 } from "@/components/ui/sheet";
-import { CategoryForm, FormValues } from "./category-form";
-import { useCreateCategory } from "@/actions/categories/use-create-category";
-import { useState } from "react";
-import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
+import { Button } from "../ui/button";
+
 
 export const NewCategorySheet = () => {
 

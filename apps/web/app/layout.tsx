@@ -2,20 +2,10 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { IBM_Plex_Sans } from 'next/font/google'
 
-import { Header } from "@/components/header";
+import { GeistSans } from "geist/font/sans";
 import { Toaster } from "@/components/ui/toaster";
 import { QueryProvider } from "@/providers/query-provider";
-import { SheetAccountProvider } from "@/providers/sheet-account-provider";
-
-
-export const ibm_plex_sans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: "--font-ibm-plex-sans",
-  weight: ['400', '500', '600', '700'],
-});
 
 export const metadata: Metadata = {
   title: "Savvy",
@@ -30,13 +20,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`antialiased ${ibm_plex_sans.className}`}>
+        <body className={`antialiased ${GeistSans.className}`}>
           <QueryProvider>
-            <SheetAccountProvider />
-            <Header />
-            <main px-3 lg-px-14>
-              {children}
-            </main>
+            {children}
             <Toaster />
           </QueryProvider>
         </body>

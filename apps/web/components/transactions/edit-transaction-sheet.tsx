@@ -1,9 +1,9 @@
 "use client";
 
-import { AccountForm, FormValues } from "./account-form";
-import { useGetAccount } from "@/actions/accounts/use-get-account";
-import { useEditAccount } from "@/actions/accounts/use-edit-account";
-import { useDeleteAccount } from "@/actions/accounts/use-delete-account";
+import { TransactionForm, FormValues, ApiFormValues } from "./transaction-form";
+import { useGetTransaction } from "@/actions/transactions/use-get-transaction";
+import { useEditTransaction } from "@/actions/transactions/use-edit-transaction";
+import { useDeleteTransaction } from "@/actions/transactions/use-delete-transaction";
 
 import { Loader2 } from "lucide-react";
 
@@ -15,25 +15,28 @@ import {
     SheetDescription,
 } from "@/components/ui/sheet";
 
-type EditAccountSheetProps = {
+
+
+type EditTransactionSheetProps = {
     id: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
 
-export const EditAccountSheet = ({ 
+export const EditTransactionSheet = ({ 
     id,
     isOpen, 
     setIsOpen,
-}: EditAccountSheetProps) => {
-    const accountQuery = useGetAccount(id);
-    const editMutation = useEditAccount(id);
-    const deleteMutation = useDeleteAccount(id);
+}: EditTransactionSheetProps) => {
+    
+    const transactionQuery = useGetTransaction(id);
+    const editMutation = useEditTransaction(id);
+    const deleteMutation = useDeleteTransaction(id);
 
-    const isLoading = accountQuery.isLoading;
+    const isLoading = transactionQuery.isLoading;
     const isPending = editMutation.isPending || deleteMutation.isPending;
 
-    const onSubmit = (values: FormValues) => {
+    const onSubmit = (values: ApiFormValues) => {
         editMutation.mutate(values, {
             onSuccess: () => setIsOpen(false)
         });
@@ -44,18 +47,14 @@ export const EditAccountSheet = ({
         setIsOpen(false);
     }
 
-    const defaultValues = accountQuery.data ? {
-        name: accountQuery.data.name
-    } : { name: "" }
-
     return (
         <>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetContent className="space-y-4 ">
                     <SheetHeader>
-                        <SheetTitle>Edit Account</SheetTitle>
+                        <SheetTitle>Edit Transaction</SheetTitle>
                         <SheetDescription>
-                            Edit an existing account.
+                            Edit an existing transaction.
                         </SheetDescription>
                     </SheetHeader>
                     {isLoading ? (
@@ -63,13 +62,7 @@ export const EditAccountSheet = ({
                             <Loader2 className="size-4 text-muted-foreground animate-spin" />
                         </span>
                     ) : (
-                        <AccountForm
-                            id={id}
-                            onSubmit={onSubmit}
-                            disabled={isPending}
-                            onDelete={handleDelete}
-                            defaultValues={defaultValues}
-                        />
+                        <></>
                     )}
                 </SheetContent>
             </Sheet>
