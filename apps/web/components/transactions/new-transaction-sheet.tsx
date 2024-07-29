@@ -58,6 +58,7 @@ export const NewTransactionSheet = () => {
             <SheetTrigger asChild>
                 <Button
                     size="sm"
+                    className="w-full lg:w-auto"
                 >
                     <Plus className="size-4 mr-2" />
                     Add New

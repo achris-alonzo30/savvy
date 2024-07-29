@@ -15,7 +15,7 @@ type TableHeadSelectProps = {
 }
 
 const options = [
-    "amount", "date", "payee", "notes"
+    "amount", "date", "payee"
 ]
 
 export const TableHeadSelect = ({
