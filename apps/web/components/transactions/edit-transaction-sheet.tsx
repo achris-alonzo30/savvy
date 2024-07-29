@@ -1,6 +1,10 @@
 "use client";
 
-import { TransactionForm, FormValues, ApiFormValues } from "./transaction-form";
+import { TransactionForm, ApiFormValues } from "./transaction-form";
+import { useGetAccounts } from "@/actions/accounts/use-get-accounts";
+import { useCreateAccount } from "@/actions/accounts/use-create-account";
+import { useGetCategories } from "@/actions/categories/use-get-categories";
+import { useCreateCategory } from "@/actions/categories/use-create-category";
 import { useGetTransaction } from "@/actions/transactions/use-get-transaction";
 import { useEditTransaction } from "@/actions/transactions/use-edit-transaction";
 import { useDeleteTransaction } from "@/actions/transactions/use-delete-transaction";
@@ -16,25 +20,52 @@ import {
 } from "@/components/ui/sheet";
 
 
-
 type EditTransactionSheetProps = {
     id: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
 
-export const EditTransactionSheet = ({ 
+export const EditTransactionSheet = ({
     id,
-    isOpen, 
+    isOpen,
     setIsOpen,
 }: EditTransactionSheetProps) => {
-    
+
     const transactionQuery = useGetTransaction(id);
     const editMutation = useEditTransaction(id);
     const deleteMutation = useDeleteTransaction(id);
 
-    const isLoading = transactionQuery.isLoading;
-    const isPending = editMutation.isPending || deleteMutation.isPending;
+    const categoryQuery = useGetCategories();
+    const categoryMutation = useCreateCategory();
+
+    const onCreateCategory = (name: string) => categoryMutation.mutate({ name });
+    const categoryOptions = (categoryQuery.data ?? []).map((c) => ({
+        label: c.name,
+        value: c.id,
+    }));
+
+
+    const accountQuery = useGetAccounts();
+    const accountMutation = useCreateAccount();
+
+    const onCreateAccount = (name: string) => accountMutation.mutate({ name });
+    const accountOptions = (accountQuery.data ?? []).map((a) => ({
+        label: a.name,
+        value: a.id,
+    }));
+
+    const isLoading = 
+        transactionQuery.isLoading || 
+        categoryQuery.isLoading || 
+        accountQuery.isLoading;
+        
+    const isPending = 
+        editMutation.isPending || 
+        deleteMutation.isPending || 
+        transactionQuery.isPending ||
+        categoryMutation.isPending || 
+        accountMutation.isPending;
 
     const onSubmit = (values: ApiFormValues) => {
         editMutation.mutate(values, {
@@ -42,9 +73,25 @@ export const EditTransactionSheet = ({
         });
     }
 
-    const handleDelete = () => {
+    const onDelete = () => {
         deleteMutation.mutate();
         setIsOpen(false);
+    }
+
+    const defaultValues = transactionQuery.data ? {
+        payee: transactionQuery.data.payee,
+        notes: transactionQuery.data.notes,
+        accountId: transactionQuery.data.accountId,
+        category: transactionQuery.data.categoryId,
+        amount: transactionQuery.data.amount.toString(),
+        date: transactionQuery.data.date ? new Date(transactionQuery.data.date) : new Date(),
+    } : {
+        payee: "",
+        notes: "",
+        accountId: "",
+        category: "",
+        amount: "",
+        date: new Date(),
     }
 
     return (
@@ -62,7 +109,17 @@ export const EditTransactionSheet = ({
                             <Loader2 className="size-4 text-muted-foreground animate-spin" />
                         </span>
                     ) : (
-                        <></>
+                        <TransactionForm
+                            id={id}
+                            onDelete={onDelete}
+                            onSubmit={onSubmit}
+                            disabled={isPending}
+                            defaultValues={defaultValues}
+                            categoryOptions={categoryOptions}
+                            onCreateCategory={onCreateCategory}
+                            accountOptions={accountOptions}
+                            onCreateAccount={onCreateAccount}
+                        />
                     )}
                 </SheetContent>
             </Sheet>
